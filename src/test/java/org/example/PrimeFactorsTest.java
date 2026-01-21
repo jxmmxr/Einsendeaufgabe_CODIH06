@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -11,6 +12,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PrimeFactorsTest {
     private final PrintStream originalOut = System.out;
@@ -30,17 +32,22 @@ public class PrimeFactorsTest {
     @ParameterizedTest(name = "primeFactors({0}) -> \"{1}\"")
     @CsvSource({
             "16, '2 2 2 2'",
-            "1,  ''",
-            "0,  ''",
-            "-1, ''",
             "20, '2 2 5'",
-            "64, '2 2 2 2 2 2'"
+            "64, '2 2 2 2 2 2'",
+            "9,  '3 3'",
+            "19, '19'",
+            "18, '2 3 3'",
+            "28, '2 2 7'",
+            "1,  ''",
+            "-1, ''",
+            "0,  ''"
     })
     void primeFactors_prints_expected_factors(int input, String expected) {
         outContent.reset();
 
         assertTimeoutPreemptively(Duration.ofMillis(200), () ->
-        PrimeFactors.primeFactors(input));
+                PrimeFactors.primeFactors(input)
+        );
 
         String output = outContent.toString().replace("\r\n", "\n").trim();
 
