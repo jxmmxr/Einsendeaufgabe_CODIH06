@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'info.solidsoft.pitest' version '1.19.0-rc.3'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)  // oder 17
+    }
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+pitest {
+    junit5PluginVersion.set("1.2.2")
+    targetClasses = ['org.example.*']  //by default "${project.group}.*"
+    pitestVersion = '1.15.0' //not needed when a default PIT version should be used
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    //timeoutConstInMillis = 1000
+    //timeoutFactor = 3.0
+}
